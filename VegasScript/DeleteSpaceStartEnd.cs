@@ -12,15 +12,12 @@ namespace DeleteSpaceEnd
         {
             myVegas = vegas;
 
-            // удалить в конце фрагмента
             Timecode DeleteSpaceEnd = new Timecode("00:00:00:20");
             Timecode DeleteSpaceStart = new Timecode("00:00:00:3");
 
 
-            // обход треков
             foreach (Track CurrentTrack in myVegas.Project.Tracks)
             {
-                //если трек выделен
                 if (CurrentTrack.Selected)
                 {
                     int count = 0;
@@ -31,30 +28,31 @@ namespace DeleteSpaceEnd
                         distanceSet.Add(CurrentTrack.Events[i].Start - CurrentTrack.Events[i - 1].End);
                     }
 
-                    // обход фрагментов текущего трека
                     for (int i = 0; i < CurrentTrack.Events.Count; i++)
                     {
-                        // текущий фрагмент
                         TrackEvent CurrentEvent = CurrentTrack.Events[i];
-
-                        if (CurrentEvent.Length > (DeleteSpaceEnd + DeleteSpaceStart))
+                        if (CurrentEvent.Selected)
                         {
-                            CurrentEvent.ActiveTake.Offset += DeleteSpaceStart;
-                            CurrentEvent.Length -= DeleteSpaceEnd + DeleteSpaceStart;
 
-                            if (count > 0)
+                            if (CurrentEvent.Length > (DeleteSpaceEnd + DeleteSpaceStart))
                             {
-                                double Milliseconds = (DeleteSpaceEnd + DeleteSpaceStart).ToMilliseconds() * count;
-                                CurrentEvent.Start -= Timecode.FromMilliseconds(Milliseconds);
+                                CurrentEvent.ActiveTake.Offset += DeleteSpaceStart;
+                                CurrentEvent.Length -= DeleteSpaceEnd + DeleteSpaceStart;
+
+                                if (count > 0)
+                                {
+                                    double Milliseconds = (DeleteSpaceStart).ToMilliseconds() * count;
+                                    CurrentEvent.Start += Timecode.FromMilliseconds(Milliseconds);
+                                }
+
+                                count++;
                             }
+                            //else
+                            //{
+                            //    if (i > 0)
+                            //        CurrentEvent.Start = CurrentTrack.Events[i - 1].End + distanceSet[i];
 
-                            count++;
-                        }
-                        else
-                        {
-                            if (i > 0)
-                                CurrentEvent.Start = CurrentTrack.Events[i - 1].End + distanceSet[i];
-
+                            //}
                         }
                     }
                 }
