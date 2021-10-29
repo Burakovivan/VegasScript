@@ -1,15 +1,4 @@
-/**
- * Название: DeleteSpaceEnd.cs
- *    Автор: Дмитрий Чайник <chainick@narod.ru>
- *     Дата: 08.10.2012
- *   Версия: 0.0.1
- * Описание: Скрипт для каждого фрагмента выделенного трека удаляет 
- *           c конца заданное количество кадров (переменная DeleteSpaceEnd).
- **/
-
-
-using System;
-using System.IO;
+using System.Collections.Generic;
 using ScriptPortal.Vegas;
 
 namespace DeleteSpaceEnd
@@ -17,24 +6,30 @@ namespace DeleteSpaceEnd
     public class EntryPoint
     {
 
-        Vegas myVegas = null;
+        private Vegas myVegas { get; set; }
 
         public void FromVegas(Vegas vegas)
         {
             myVegas = vegas;
 
             // удалить в конце фрагмента
-            Timecode DeleteSpaceEnd = new Timecode("00:00:00:50");
-            Timecode DeleteSpaceStart = new Timecode("00:00:00:50");
+            Timecode DeleteSpaceEnd = new Timecode("00:00:00:20");
+            Timecode DeleteSpaceStart = new Timecode("00:00:00:3");
 
 
             // обход треков
             foreach (Track CurrentTrack in myVegas.Project.Tracks)
             {
                 //если трек выделен
-                if (true == CurrentTrack.Selected)
+                if (CurrentTrack.Selected)
                 {
                     int count = 0;
+
+                    var distanceSet = new List<Timecode>();
+                    for (int i = 1; i < CurrentTrack.Events.Count; i++)
+                    {
+                        distanceSet.Add(CurrentTrack.Events[i].Start - CurrentTrack.Events[i - 1].End);
+                    }
 
                     // обход фрагментов текущего трека
                     for (int i = 0; i < CurrentTrack.Events.Count; i++)
@@ -42,23 +37,23 @@ namespace DeleteSpaceEnd
                         // текущий фрагмент
                         TrackEvent CurrentEvent = CurrentTrack.Events[i];
 
-                        if (DeleteSpaceEnd + DeleteSpaceStart < CurrentEvent.Length)
+                        if (CurrentEvent.Length > (DeleteSpaceEnd + DeleteSpaceStart))
                         {
-                            CurrentEvent.ActiveTake.Offset += DeleteSpaceEnd;
-                            CurrentEvent.Length -= DeleteSpaceEnd;
+                            CurrentEvent.ActiveTake.Offset += DeleteSpaceStart;
+                            CurrentEvent.Length -= DeleteSpaceEnd + DeleteSpaceStart;
 
                             if (count > 0)
                             {
-                                double Milliseconds = DeleteSpaceEnd.ToMilliseconds() * count;
+                                double Milliseconds = (DeleteSpaceEnd + DeleteSpaceStart).ToMilliseconds() * count;
                                 CurrentEvent.Start -= Timecode.FromMilliseconds(Milliseconds);
                             }
 
-                            count += 1;
+                            count++;
                         }
                         else
                         {
                             if (i > 0)
-                                CurrentEvent.Start = CurrentTrack.Events[i - 1].End;
+                                CurrentEvent.Start = CurrentTrack.Events[i - 1].End + distanceSet[i];
 
                         }
                     }
