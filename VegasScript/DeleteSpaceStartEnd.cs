@@ -20,8 +20,6 @@ namespace DeleteSpaceEnd
             {
                 if (CurrentTrack.Selected)
                 {
-                    int count = 0;
-
                     var distanceSet = new List<Timecode>();
                     for (int i = 1; i < CurrentTrack.Events.Count; i++)
                     {
@@ -38,21 +36,10 @@ namespace DeleteSpaceEnd
                             {
                                 CurrentEvent.ActiveTake.Offset += DeleteSpaceStart;
                                 CurrentEvent.Length -= DeleteSpaceEnd + DeleteSpaceStart;
+                                CurrentEvent.Start += DeleteSpaceStart;
 
-                                if (count > 0)
-                                {
-                                    double Milliseconds = (DeleteSpaceStart).ToMilliseconds() * count;
-                                    CurrentEvent.Start += Timecode.FromMilliseconds(Milliseconds);
-                                }
-
-                                count++;
                             }
-                            //else
-                            //{
-                            //    if (i > 0)
-                            //        CurrentEvent.Start = CurrentTrack.Events[i - 1].End + distanceSet[i];
 
-                            //}
                         }
                     }
                 }
