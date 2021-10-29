@@ -1,49 +1,24 @@
 using System.Collections.Generic;
 using ScriptPortal.Vegas;
 
-namespace DeleteSpaceEnd
+namespace DeleteSpaceStartEnd
 {
     public class EntryPoint
     {
-
-        private Vegas myVegas { get; set; }
-
         public void FromVegas(Vegas vegas)
         {
-            myVegas = vegas;
-
             Timecode DeleteSpaceEnd = new Timecode("00:00:00:20");
             Timecode DeleteSpaceStart = new Timecode("00:00:00:3");
 
-
-            foreach (Track CurrentTrack in myVegas.Project.Tracks)
-            {
+            foreach (Track CurrentTrack in vegas.Project.Tracks)
                 if (CurrentTrack.Selected)
-                {
-                    var distanceSet = new List<Timecode>();
-                    for (int i = 1; i < CurrentTrack.Events.Count; i++)
-                    {
-                        distanceSet.Add(CurrentTrack.Events[i].Start - CurrentTrack.Events[i - 1].End);
-                    }
-
-                    for (int i = 0; i < CurrentTrack.Events.Count; i++)
-                    {
-                        TrackEvent CurrentEvent = CurrentTrack.Events[i];
-                        if (CurrentEvent.Selected)
+                    foreach (var CurrentEvent in CurrentTrack.Events)
+                        if (CurrentEvent.Selected && CurrentEvent.Length > (DeleteSpaceEnd + DeleteSpaceStart))
                         {
-
-                            if (CurrentEvent.Length > (DeleteSpaceEnd + DeleteSpaceStart))
-                            {
-                                CurrentEvent.ActiveTake.Offset += DeleteSpaceStart;
-                                CurrentEvent.Length -= DeleteSpaceEnd + DeleteSpaceStart;
-                                CurrentEvent.Start += DeleteSpaceStart;
-
-                            }
-
+                            CurrentEvent.ActiveTake.Offset += DeleteSpaceStart;
+                            CurrentEvent.Length -= DeleteSpaceEnd + DeleteSpaceStart;
+                            CurrentEvent.Start += DeleteSpaceStart;
                         }
-                    }
-                }
-            }
         }
     }
 }
