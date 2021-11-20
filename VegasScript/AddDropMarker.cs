@@ -1,11 +1,9 @@
 /*
 —брос таймкода фала из медиа пула по ссылке активного ивента(ов)
 */
-using ScriptPortal.Vegas;
-using System;
-using System.Collections.Generic;
+using ScriptPortal.Vegas; 
 
-namespace DeleteSpaceStartEnd
+namespace AddDropMarker
 {
     public class EntryPoint
     {

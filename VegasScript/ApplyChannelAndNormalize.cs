@@ -1,7 +1,7 @@
  
 using ScriptPortal.Vegas;
 
-namespace DeleteSpaceStartEnd
+namespace ApplyChannelAndNormalize
 {
     public class EntryPoint
     {

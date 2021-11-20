@@ -5,7 +5,7 @@ using ScriptPortal.Vegas;
 using System;
 using System.Collections.Generic;
 
-namespace DeleteSpaceStartEnd
+namespace DropAudioEvent
 {
     public class EntryPoint
     {

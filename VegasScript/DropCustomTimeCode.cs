@@ -3,7 +3,7 @@
 */
 using ScriptPortal.Vegas;
 
-namespace DeleteSpaceStartEnd
+namespace DropCustomTimeCode
 {
     public class EntryPoint
     {
