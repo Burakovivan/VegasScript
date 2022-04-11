@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="ApplyChannelAndNormalize.cs" />
     <Compile Include="AddDropMarker.cs" />
+    <Compile Include="SetOpacity.cs" />
+    <Compile Include="SetLenghtAndGroup.cs" />
     <Compile Include="DropAudioEvent.cs" />
     <Compile Include="MoveCursor.cs" />
     <Compile Include="DropCustomTimeCode.cs" />

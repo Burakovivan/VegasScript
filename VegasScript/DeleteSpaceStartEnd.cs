@@ -2,9 +2,9 @@ using ScriptPortal.Vegas;
 
 namespace DeleteSpaceStartEnd
 {
-    public class EntryPoint
+    public partial class EntryPoint
     {
-        public void FromVegas(Vegas vegas)
+        public void FromVegas(Vegas vegas) 
         {
             Timecode DeleteSpaceEnd = new Timecode("00:00:00:20");
             Timecode DeleteSpaceStart = new Timecode("00:00:00:3");
