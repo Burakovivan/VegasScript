@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GrabAllVideoToSingleTrack.cs" />
     <Compile Include="ApplyChannelAndNormalize.cs" />
     <Compile Include="AddDropMarker.cs" />
     <Compile Include="FadeApply.cs" />
