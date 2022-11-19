@@ -348,9 +348,9 @@ public class EntryPoint {
                             continue;
                         }
                         // filter out templates that have more channels than the project
-                        if (projectAudioChannelCount <= template.AudioChannelCount) {
-                            continue;
-                        }
+                        //if (projectAudioChannelCount < template.AudioChannelCount) {
+                        //    continue;
+                        //}
                         // filter out templates that don't have
                         // exactly one file extension
                         String[] extensions = template.FileExtensions;
