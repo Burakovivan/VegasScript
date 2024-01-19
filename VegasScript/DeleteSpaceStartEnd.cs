@@ -1,6 +1,5 @@
 using VegasWrapper = ScriptPortal.Vegas.Vegas;
-using ScriptPortal.Vegas;
-using System.Collections.Generic;
+using ScriptPortal.Vegas; 
 
 namespace DeleteSpaceStartEnd
 {
@@ -8,42 +7,21 @@ namespace DeleteSpaceStartEnd
     {
         public void FromVegas(VegasWrapper vegas)
         {
-            Timecode DeleteSpace = new Timecode("00:00:00:25");
-            //Timecode DeleteSpace = Timecode.FromMilliseconds(50000);
-            //Timecode DeleteSpace = Timecode.FromSeconds(50000);
-            //Timecode DeleteSpace = Timecode.FromFrames(50000);
-            //Timecode DeleteSpace = Timecode.FromPositionString("00:00:00:50");
+            Timecode DeleteSpaceEnd = Timecode.FromPositionString("00:00:00:20");
+            Timecode DeleteSpaceStart = Timecode.FromPositionString("00:00:00:03");
 
-            foreach (var currentEvent in GetEventListOnSelectedTrack(vegas))
-            {
-                RemoveSpaces(currentEvent, DeleteSpace);
-            }
-        }
-        private IEnumerable<TrackEvent> GetEventListOnSelectedTrack(VegasWrapper vegas)
-        {
+            Timecode Shift = Timecode.FromMilliseconds(10);
+
             foreach (Track CurrentTrack in vegas.Project.Tracks)
-            {
                 if (CurrentTrack.Selected)
-                {
                     foreach (var CurrentEvent in CurrentTrack.Events)
-                    {
-                        if (CurrentEvent.Selected)
+                        if (CurrentEvent.Selected && CurrentEvent.Length > (DeleteSpaceEnd + DeleteSpaceStart))
                         {
-                            yield return CurrentEvent;
-                        }
-                    }
-                }
-            }
-        }
+                            CurrentEvent.ActiveTake.Offset += DeleteSpaceStart;
+                            CurrentEvent.Length -= DeleteSpaceEnd + DeleteSpaceStart;
+                            CurrentEvent.Start += DeleteSpaceStart + Shift;
+                        }  
 
-        private void RemoveSpaces(TrackEvent trackEvent, Timecode timecode)
-        {
-            if (timecode + timecode < trackEvent.Length)
-            {
-                trackEvent.ActiveTake.Offset += timecode;
-                trackEvent.Length -= (timecode + timecode);
-                trackEvent.Start += timecode;
-            }
         }
     }
 }
